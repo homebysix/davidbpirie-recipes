@@ -9,9 +9,16 @@ MinimumVersion: 2.3.0
 
 Input:
   NAME: WebexAudioDriver
-  url: https://www.cisco.com/c/dam/en/us/td/docs/collaboration/webex_centers/Collaboration-Help/TS-Help-Portal-Support-Utilities/CiscoAudioDeviceInstall/CiscoAudioDeviceInstall.pkg
+  SEARCH_RE: <a href="(https://www\.cisco\.com/[^"]*/CiscoAudioDeviceInstall\.pkg)">
+  SEARCH_URL: https://help.webex.com/en-us/article/WBX9000031110/Cisco-Webex-Audio-Driver-Package-Download-for-Mac
 
 Process:
+- Processor: URLTextSearcher
+  Arguments:
+    re_pattern: '%SEARCH_RE%'
+    result_output_var_name: url
+    url: '%SEARCH_URL%'
+
 - Processor: URLDownloader
 
 - Processor: EndOfCheckPhase
