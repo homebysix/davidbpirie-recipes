@@ -25,9 +25,9 @@ Process:
 
   - Processor: PlistReader
     Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/src_payload/Library/Audio/Plug-Ins/HAL/CiscoAudioDevice.driver/Contents/Info.plist'
+      info_path: '%RECIPE_CACHE_DIR%/src_payload/Library/Audio/Plug-Ins/HAL/CiscoAudioDevice.driver/Contents/Resources/version.plist'
       plist_keys:
-        CFBundleShortVersionString: version
+        BuildVersion: version
 
   - Processor: PkgCopier
     Arguments:
