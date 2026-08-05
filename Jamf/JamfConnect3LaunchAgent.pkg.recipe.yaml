@@ -1,0 +1,43 @@
+Description: |
+  Verifies the signature and extracts the version from the source pkg,
+  then copies the pkg.
+
+  Source dmg must be manually downloaded, then provided either as
+  Input Variable PKG or via the -p parameter eg:
+  autopkg run JamfConnect3LaunchAgent.pkg -p "path/to/JamfConnect-3.11.0.dmg"
+
+Identifier: com.github.davidbpirie.pkg.JamfConnect3LaunchAgent
+MinimumVersion: 2.3.0
+
+Input:
+  NAME: JamfConnect3LaunchAgent
+
+Process:
+  - Processor: PackageRequired
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%PKG%/Resources/JamfConnectLaunchAgent.pkg'
+      expected_authority_names:
+        - 'Developer ID Installer: JAMF Software (483DWKW443)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      flat_pkg_path: '%PKG%/Resources/JamfConnectLaunchAgent.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+
+  - Processor: com.github.nmcspadden.shared/PackageInfoVersioner
+    Arguments:
+      package_info_path: '%RECIPE_CACHE_DIR%/unpack/JamfConnectLaunchAgent.pkg/PackageInfo'
+
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%PKG%/Resources/JamfConnectLaunchAgent.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'
