@@ -1,0 +1,35 @@
+Description: |
+  Builds separate arm64 and x86_64 component packages, wraps them in a
+  top-level installer whose postinstall script installs only the package that
+  matches the device architecture, then uploads the package to munki.
+
+Identifier: com.github.davidbpirie.munki.OBS_Studio
+ParentRecipe: com.github.smithjw.pkg.OBS_Studio
+MinimumVersion: 2.3.0
+
+Input:
+  NAME: OBS_Studio
+  MUNKI_DISPLAYNAME: OBS Studio
+  MUNKI_DESCRIPTION: Free and open source software for video recording and live streaming.
+  MUNKI_CATEGORY: Photo & Video
+  MUNKI_DEVELOPER: OBS
+  MUNKI_MINIMUM_OS_VERSION: 12.0.0
+  MUNKI_REPO_SUBDIR: '%MUNKI_CATEGORY%/%MUNKI_DEVELOPER%/%NAME%'
+  pkginfo:
+    blocking_applications:
+    - OBS
+    catalogs:
+    - testing
+    category: '%MUNKI_CATEGORY%'
+    description: '%MUNKI_DESCRIPTION%'
+    developer: '%MUNKI_DEVELOPER%'
+    display_name: '%MUNKI_DISPLAYNAME%'
+    minimum_os_version: '%MUNKI_MINIMUM_OS_VERSION%'
+    name: '%NAME%'
+    unattended_install: true
+    unattended_uninstall: true
+
+Process:
+- Processor: MunkiImporter
+  Arguments:
+    repo_subdirectory: '%MUNKI_REPO_SUBDIR%'
